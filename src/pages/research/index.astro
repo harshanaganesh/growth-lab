@@ -1,0 +1,171 @@
+---
+// RESEARCH PAGE: the AI Search Visibility Study (Idea 1).
+// Reports you write go in this folder as .md files (copy _report-template.md).
+import Base from '../../layouts/Base.astro';
+import { me } from '../../../my-details.mjs';
+
+const s = me.study;
+const site = me.siteUrl.replace(/\/$/, '');
+const reports = Object.entries(import.meta.glob('./*.md', { eager: true }))
+  .filter(([path]) => !path.split('/').pop().startsWith('_'))
+  .map(([, mod]) => mod)
+  .sort((a, b) => String(b.frontmatter.date).localeCompare(String(a.frontmatter.date)));
+
+const faq = [
+  { q: 'What is AI search visibility?', a: `How often AI assistants such as ${s.assistants.join(', ')} mention or recommend a brand when people ask them for advice, and which websites they use as sources.` },
+  { q: 'How is the data collected?', a: `The same ${s.questions} questions are asked to each assistant every month, in a new chat each time, with personalisation turned off where possible. Every answer is logged, and five questions are repeated three times to measure how much answers vary.` },
+  { q: 'Is the data public?', a: 'Yes. Each round is published here with its method and limits, and the live dashboard shows every round so far.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `AI Search Visibility Study: ${s.niche}`,
+    url: site + '/research/',
+    author: { '@type': 'Person', name: me.name, url: site + '/' },
+    about: ['AI search', 'Generative engine optimisation', s.niche],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: `AI Search Visibility Study: ${s.niche}`,
+    description: `Monthly record of which brands ${s.assistants.length} AI assistants (${s.assistants.join(', ')}) recommend for ${s.questions} fixed shopper questions about ${s.niche}, and which sources they cite.`,
+    url: site + '/research/',
+    creator: { '@type': 'Person', name: me.name },
+    keywords: ['AI search', 'share of voice', 'AI citations', s.niche],
+    measurementTechnique: 'Fixed prompt set, new chat per prompt, monthly collection, repeat-test for consistency',
+    variableMeasured: ['AI share of voice', 'First-mention rate', 'Citation source type', 'Answer consistency'],
+    isAccessibleForFree: true,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+const statusClass = (x) => 'pill pill-' + x.toLowerCase();
+---
+<Base
+  title={`AI Search Visibility Study: ${s.niche}`}
+  description={`Which ${s.niche} do ChatGPT, Gemini, Perplexity and Copilot recommend, and why? A monthly study by ${me.name}.`}
+  schema={schema}
+  crumbs={[{ name: 'Research', path: '/research/' }]}
+>
+  <section class="section head-band">
+    <div class="wrap stack-lg">
+      <div class="stack">
+        <p class="eyebrow">Research · Monthly study</p>
+        <h1>Which brands do AI assistants recommend?</h1>
+        <p class="lead">Every month I ask {s.assistants.join(', ')} the same {s.questions} shopper questions about {s.niche}. I log every brand they name and every source they cite, then publish what changed.</p>
+      </div>
+      <div class="method">
+        <div class="m"><span class="eyebrow">Questions</span><b>{s.questions}</b><span class="muted">fixed, real shopper wording</span></div>
+        <div class="m"><span class="eyebrow">Assistants</span><b>{s.assistants.length}</b><span class="muted">{s.assistants.join(' · ')}</span></div>
+        <div class="m"><span class="eyebrow">Answers per round</span><b>{s.questions * s.assistants.length}</b><span class="muted">new chat every time</span></div>
+        <div class="m"><span class="eyebrow">Rounds</span><b>{s.rounds.length}</b><span class="muted">about a month apart</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two">
+      <div class="stack">
+        <p class="eyebrow">Live dashboard</p>
+        <h2>The numbers, as they come in</h2>
+        <p class="muted">AI share of voice by brand and assistant, the sources AI cites most, and how each changes from round to round.</p>
+      </div>
+      {me.lookerEmbedUrl ? (
+        <div class="dash"><iframe src={me.lookerEmbedUrl} title="AI Search Visibility dashboard" loading="lazy" allowfullscreen></iframe></div>
+      ) : (
+        <div class="dash dash-empty">
+          <div class="bars" aria-hidden="true"><span style="--h:70%"></span><span style="--h:52%"></span><span style="--h:38%"></span><span style="--h:24%"></span><span style="--h:14%"></span></div>
+          <p><strong>Dashboard goes live after Round 1.</strong></p>
+          <p class="muted">Data collection starts {s.rounds[0]?.dates}.</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="wrap stack-lg">
+      <div class="stack"><p class="eyebrow">Rounds</p><h2>Collection schedule</h2></div>
+      <ol class="rounds">
+        {s.rounds.map((r) => (
+          <li class="card"><div><h3>{r.name}</h3><p class="muted">{r.dates}</p></div><span class={statusClass(r.status)}>{r.status}</span></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap stack-lg">
+      <div class="stack"><p class="eyebrow">Reports</p><h2>Findings, round by round</h2></div>
+      {reports.length ? (
+        <div class="list">
+          {reports.map((r) => (
+            <a class="card row" href={r.url}>
+              <div class="stack-sm"><h3>{r.frontmatter.title}</h3><p class="muted">{r.frontmatter.description}</p></div>
+              <span class="eyebrow">{r.frontmatter.date}</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="card muted">The first report is published after Round 1. Check back in early December.</p>
+      )}
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="wrap two">
+      <div class="stack"><p class="eyebrow">Method</p><h2>How I keep it fair</h2></div>
+      <ul class="rules">
+        <li>The same question wording every month.</li>
+        <li>A new chat for every question, with memory and personalisation off where possible.</li>
+        <li>Each round collected within the same 3 to 4 days.</li>
+        <li>Five questions repeated three times per assistant, to measure how much answers vary by chance.</li>
+        <li>Brand extraction is AI-assisted and checked by hand.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two">
+      <div class="stack"><p class="eyebrow">FAQ</p><h2>Questions about the study</h2></div>
+      <div class="faq">
+        {faq.map((f) => (<details><summary>{f.q}</summary><p class="muted">{f.a}</p></details>))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head-band { border-bottom: 1px solid var(--line); }
+  .stack-lg { display: grid; gap: 36px; }
+  .stack-sm { display: grid; gap: 4px; }
+  .method { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .m { display: grid; gap: 6px; padding: 20px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
+  .m b { font-family: var(--display); font-size: 2.4rem; line-height: 1; color: var(--accent); }
+  .m .muted { font-size: 0.9rem; }
+  .two { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: start; }
+  .dash { border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface); overflow: hidden; aspect-ratio: 4 / 3; max-width: 100%; }
+  .dash iframe { width: 100%; height: 100%; border: 0; }
+  .dash-empty { display: grid; place-content: center; text-align: center; gap: 8px; padding: 28px; }
+  .bars { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 120px; margin-bottom: 12px; }
+  .bars span { width: 34px; height: var(--h); border-radius: 8px 8px 3px 3px; background: var(--accent-soft); border: 1.5px dashed var(--accent); }
+  .band { background: var(--surface); border-block: 1px solid var(--line); }
+  .rounds { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .rounds li { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--paper); }
+  .list { display: grid; gap: 12px; }
+  .row { display: flex; justify-content: space-between; gap: 20px; align-items: center; text-decoration: none; color: var(--ink); }
+  .row:hover { border-color: var(--accent); }
+  .rules { margin: 0; padding-left: 1.2em; display: grid; gap: 12px; }
+  .faq { display: grid; gap: 10px; }
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 20px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { margin-top: 10px; }
+  @media (max-width: 900px) {
+    .method { grid-template-columns: 1fr 1fr; }
+    .two, .rounds { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+// Layout for anything you write in Markdown (.md): research reports and case studies.
+import Base from './Base.astro';
+import { me } from '../../my-details.mjs';
+
+const { frontmatter, url } = Astro.props;
+const site = me.siteUrl.replace(/\/$/, '');
+const section = (url || '').startsWith('/research') ? { name: 'Research', path: '/research/' } : { name: 'Case studies', path: '/case-studies/' };
+
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: frontmatter.title,
+  description: frontmatter.description,
+  datePublished: frontmatter.date,
+  author: { '@type': 'Person', name: me.name, url: site + '/' },
+  mainEntityOfPage: site + (url || '/'),
+}];
+---
+<Base
+  title={frontmatter.title}
+  description={frontmatter.description}
+  schema={schema}
+  type="article"
+  crumbs={[section, { name: frontmatter.title, path: url || '/' }]}
+>
+  <article class="wrap section">
+    <header class="post-head">
+      <a class="back" href={section.path}>← {section.name}</a>
+      {frontmatter.result && <p class="result">{frontmatter.result}</p>}
+      <h1>{frontmatter.title}</h1>
+      <p class="lead">{frontmatter.description}</p>
+      <p class="eyebrow">{me.name} · {frontmatter.date}</p>
+    </header>
+    <div class="prose"><slot /></div>
+  </article>
+</Base>
+
+<style>
+  .post-head { display: grid; gap: 18px; max-width: 68ch; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+  .back { font-weight: 600; text-decoration: none; }
+  .result { width: fit-content; font-family: var(--mono); font-weight: 600; font-size: 0.85rem; color: var(--good); background: var(--good-soft); padding: 8px 12px; border-radius: 999px; }
+  h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); }
+</style>

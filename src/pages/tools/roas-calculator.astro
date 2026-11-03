@@ -1,0 +1,154 @@
+---
+// ROAS CALCULATOR. Copy this file to make a new tool.
+import Base from '../../layouts/Base.astro';
+import { me } from '../../../my-details.mjs';
+
+const site = me.siteUrl.replace(/\/$/, '');
+const faq = [
+  { q: 'What is a good ROAS?', a: 'It depends on your margin. Your ads break even when ROAS equals 1 divided by your gross margin. At a 40% margin, you need a ROAS of at least 2.5x before ads make a profit.' },
+  { q: 'How do I calculate ROAS?', a: 'Divide the revenue your ads brought in by what you spent on them. ₹40,000 of revenue from ₹10,000 of ad spend is a ROAS of 4x.' },
+  { q: 'Is ROAS the same as ROI?', a: 'No. ROAS uses revenue, while ROI uses profit after all costs. A campaign can have a high ROAS and still lose money if margins are thin.' },
+];
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'ROAS Calculator (₹)',
+    url: site + '/tools/roas-calculator/',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Any',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+    creator: { '@type': 'Person', name: me.name },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+<Base
+  title="ROAS Calculator (₹): Find Your Break-Even ROAS"
+  description="Free ROAS calculator in rupees. Enter ad spend, revenue and margin to see your ROAS, break-even ROAS and profit in seconds."
+  schema={schema}
+  crumbs={[{ name: 'Tools', path: '/tools/' }, { name: 'ROAS calculator', path: '/tools/roas-calculator/' }]}
+>
+  <section class="section">
+    <div class="wrap calc-grid">
+      <div class="stack intro">
+        <a class="back" href="/tools/">← All tools</a>
+        <h1>ROAS calculator</h1>
+        <p class="lead">See how much revenue every ₹1 of ad spend brings back, and whether your ads actually make a profit.</p>
+      </div>
+
+      <form id="roas-form" class="card calc" novalidate>
+        <label for="spend">Ad spend <span class="unit">₹</span></label>
+        <input id="spend" name="spend" type="number" inputmode="decimal" min="1" step="any" value="10000" required />
+        <label for="revenue">Revenue from those ads <span class="unit">₹</span></label>
+        <input id="revenue" name="revenue" type="number" inputmode="decimal" min="0" step="any" value="40000" required />
+        <label for="margin">Gross margin <span class="unit">%</span></label>
+        <input id="margin" name="margin" type="number" inputmode="decimal" min="1" max="100" step="any" value="40" required />
+        <button class="btn btn-primary" type="submit">Calculate</button>
+        <p id="error" class="error" role="alert" hidden></p>
+
+        <div id="result" class="result" aria-live="polite" hidden>
+          <div class="r"><span class="eyebrow">Your ROAS</span><b id="roas">–</b></div>
+          <div class="r"><span class="eyebrow">Break-even ROAS</span><b id="breakeven">–</b></div>
+          <div class="r"><span class="eyebrow">Profit after ads</span><b id="profit">–</b></div>
+          <div class="meter" aria-hidden="true"><i id="meter-fill"></i><span id="meter-mark"></span></div>
+          <p id="verdict" class="verdict"></p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="wrap prose">
+      <h2>What is ROAS?</h2>
+      <p>ROAS (return on ad spend) tells you how much revenue each rupee of advertising brought back. If you spent ₹10,000 on ads and they brought in ₹40,000 of sales, your ROAS is 4x.</p>
+      <h2>The formula</h2>
+      <p><strong>ROAS = revenue from ads ÷ ad spend</strong></p>
+      <p><strong>Break-even ROAS = 1 ÷ gross margin.</strong> With a 40% margin, every ₹1 of revenue leaves ₹0.40 of profit, so you need ₹2.50 of revenue for every ₹1 of ads just to break even.</p>
+      <h2>How to improve ROAS</h2>
+      <ul>
+        <li>Stop or cut ad sets running below your break-even ROAS for more than two weeks.</li>
+        <li>Send ad traffic to a page that matches the ad's promise.</li>
+        <li>Raise average order value with bundles or a free-shipping threshold.</li>
+        <li>Retarget visitors who added to cart but didn't buy.</li>
+      </ul>
+      <h2>Questions people ask</h2>
+      {faq.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
+      <p class="muted">More free tools: <a href="/tools/">all calculators</a>. Want to know how AI assistants talk about brands? Read the <a href="/research/">AI Search Study</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const form = $('roas-form');
+  const rupees = (n) => (n < 0 ? '−₹' : '₹') + Math.abs(Math.round(n)).toLocaleString('en-IN');
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const spend = Number($('spend').value);
+    const revenue = Number($('revenue').value);
+    const margin = Number($('margin').value) / 100;
+
+    if (!(spend > 0) || !(revenue >= 0) || !(margin > 0) || margin > 1) {
+      $('error').textContent = 'Enter an ad spend above 0, revenue of 0 or more, and a margin between 1 and 100.';
+      $('error').hidden = false;
+      return;
+    }
+    $('error').hidden = true;
+
+    const roas = revenue / spend;
+    const breakeven = 1 / margin;
+    const profit = revenue * margin - spend;
+    const profitable = roas >= breakeven;
+
+    $('roas').textContent = roas.toFixed(2) + 'x';
+    $('breakeven').textContent = breakeven.toFixed(2) + 'x';
+    $('profit').textContent = rupees(profit);
+    const scale = Math.max(roas, breakeven) * 1.25;
+    $('meter-fill').style.width = Math.min(100, (roas / scale) * 100) + '%';
+    $('meter-mark').style.left = (breakeven / scale) * 100 + '%';
+    $('result').dataset.good = String(profitable);
+    $('verdict').textContent = profitable
+      ? `Profitable. You're ${(roas - breakeven).toFixed(2)}x above break-even.`
+      : `Losing money. You need a ROAS of at least ${breakeven.toFixed(2)}x at this margin.`;
+    $('result').hidden = false;
+
+    // Tells GA4 someone used the tool (shows up as calculator_complete)
+    window.gtag?.('event', 'calculator_complete', {
+      tool_name: 'roas_calculator',
+      result_band: profitable ? 'profitable' : 'below_breakeven',
+    });
+  });
+</script>
+
+<style>
+  .calc-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 48px; align-items: start; }
+  .intro { gap: 18px; }
+  .back { font-weight: 600; text-decoration: none; }
+  .calc { display: grid; gap: 10px; padding: 28px; }
+  label { font-weight: 600; display: flex; justify-content: space-between; margin-top: 6px; }
+  .unit { font-family: var(--mono); color: var(--muted); font-weight: 500; }
+  input { font: 500 1.15rem var(--body); padding: 14px 16px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); width: 100%; }
+  input:focus { border-color: var(--accent); outline: none; }
+  button { margin-top: 12px; justify-content: center; border: 0; cursor: pointer; }
+  .error { color: var(--warn); font-weight: 600; }
+  .result { margin-top: 16px; padding-top: 20px; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .r { display: grid; gap: 4px; }
+  .r b { font-family: var(--display); font-size: 1.9rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .meter { grid-column: 1 / -1; position: relative; height: 12px; border-radius: 99px; background: var(--paper); border: 1px solid var(--line); margin-top: 8px; }
+  .meter i { position: absolute; inset: 0 auto 0 0; border-radius: 99px; background: var(--warn); transition: width .4s ease; }
+  .result[data-good='true'] .meter i { background: var(--good); }
+  .meter span { position: absolute; top: -6px; bottom: -6px; width: 2px; background: var(--ink); }
+  .verdict { grid-column: 1 / -1; font-weight: 600; color: var(--warn); }
+  .result[data-good='true'] .verdict { color: var(--good); }
+  .band { background: var(--surface); border-block: 1px solid var(--line); }
+  details { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; background: var(--paper); }
+  summary { cursor: pointer; font-weight: 600; }
+  @media (max-width: 860px) { .calc-grid { grid-template-columns: 1fr; gap: 28px; } }
+  @media (max-width: 460px) { .result { grid-template-columns: 1fr 1fr; } .r b { font-size: 1.6rem; } }
+</style>

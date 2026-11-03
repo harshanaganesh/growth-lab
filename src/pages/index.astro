@@ -1,0 +1,218 @@
+---
+// HOME PAGE. Most words here come from my-details.mjs.
+import Base from '../layouts/Base.astro';
+import { me } from '../../my-details.mjs';
+
+const site = me.siteUrl.replace(/\/$/, '');
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: `${me.name} · Growth Lab`,
+    url: site + '/',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: me.name,
+    jobTitle: me.role,
+    url: site + '/',
+    sameAs: [me.linkedin, me.github].filter((l) => l && !l.includes('your-')),
+    knowsAbout: ['Growth marketing', 'Search engine optimisation', 'AI search', 'Web analytics', 'A/B testing'],
+  },
+];
+const statusClass = (s) => 'pill pill-' + s.toLowerCase();
+const today = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+<Base
+  title={`${me.name} · ${me.role}`}
+  description={`${me.name} is a ${me.role.toLowerCase()} who researches AI search, builds free marketing tools and measures everything. ${me.intro}`}
+  schema={schema}
+>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        {me.openToWork && (
+          <p class="status"><span class="dot" aria-hidden="true"></span> Open to {me.lookingFor.toLowerCase()}</p>
+        )}
+        <h1>{me.headline}</h1>
+        <p class="lead">{me.intro}</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/research/">See the research <span aria-hidden="true">→</span></a>
+          <a class="btn btn-ghost" href="/tools/">Try a free tool</a>
+        </div>
+      </div>
+
+      <aside class="board card" aria-label="Lab board">
+        <div class="board-head">
+          <span class="eyebrow">Lab board</span>
+          <span class="eyebrow">{today}</span>
+        </div>
+        <ul class="board-list">
+          {me.experiments.map((x) => (
+            <li>
+              <div>
+                <p class="x-name">{x.name}</p>
+                <p class="x-proj">{x.project}</p>
+              </div>
+              <span class={statusClass(x.status)}>{x.status}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="now"><span class="eyebrow">Now</span> {me.nowTesting}</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- BIG NUMBERS -->
+  <section class="stats-band" aria-label="Key numbers">
+    <div class="wrap stats">
+      {me.stats.map((s) => (
+        <div class="stat">
+          <p class="stat-value">{s.value}</p>
+          <p class="stat-label">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section">
+    <div class="wrap stack-lg">
+      <div class="stack">
+        <p class="eyebrow">What's in the lab</p>
+        <h2>Two live projects, measured end to end</h2>
+      </div>
+      <div class="projects">
+        <a class="project card" href="/research/">
+          <div class="art art-research" aria-hidden="true">
+            <span style="--w:88%"></span><span style="--w:64%"></span><span style="--w:47%"></span><span style="--w:30%"></span><span style="--w:18%"></span>
+          </div>
+          <p class="eyebrow">Research</p>
+          <h3>AI Search Visibility Study</h3>
+          <p class="muted">Every month I ask {me.study.assistants.length} AI assistants the same {me.study.questions} shopper questions about {me.study.niche}, and track which brands they recommend and which sources they cite.</p>
+          <span class="go">Read the study →</span>
+        </a>
+        <a class="project card" href="/tools/">
+          <div class="art art-tools" aria-hidden="true">
+            <div class="mini-field"></div><div class="mini-field"></div><div class="mini-btn"></div>
+            <div class="mini-result"><b>4.0x</b><i></i></div>
+          </div>
+          <p class="eyebrow">Build</p>
+          <h3>Free Marketing Tools</h3>
+          <p class="muted">Calculators for ROAS, CAC and LTV in rupees, each with a plain-English guide. Every calculation is tracked, so I can test what makes them more useful.</p>
+          <span class="go">Try the tools →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW I WORK -->
+  <section class="section how-band">
+    <div class="wrap stack-lg">
+      <div class="stack">
+        <p class="eyebrow">How I work</p>
+        <h2>Question, measure, test, share. Then again.</h2>
+      </div>
+      <ol class="loop">
+        <li><span class="step">1</span><h3>Ask a sharp question</h3><p class="muted">Start from a decision someone has to make.</p></li>
+        <li><span class="step">2</span><h3>Measure it properly</h3><p class="muted">A fixed method, clean tracking, honest limits.</p></li>
+        <li><span class="step">3</span><h3>Run a real test</h3><p class="muted">A hypothesis, two versions, a result I can defend.</p></li>
+        <li><span class="step">4</span><h3>Share what I learned</h3><p class="muted">Short reports with the numbers and the "so what".</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TOOLKIT -->
+  <section class="section">
+    <div class="wrap toolkit">
+      <div class="stack">
+        <p class="eyebrow">Toolkit</p>
+        <h2>What I use every week</h2>
+      </div>
+      <div class="chips">{me.toolkit.map((t) => <span class="chip">{t}</span>)}</div>
+    </div>
+  </section>
+
+  <!-- CALL TO ACTION -->
+  <section class="wrap">
+    <div class="cta">
+      <div class="stack">
+        <h2>Hiring for growth or analytics?</h2>
+        <p class="cta-sub">I'd love to show you the live dashboard and walk you through what I'd test first for your team.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-light" href="/contact/">Get in touch</a>
+        {me.hasResume && <a class="btn btn-outline-light" href="/resume.pdf">Download resume</a>}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-block: clamp(48px, 7vw, 96px); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 32px 32px; border-bottom: 1px solid var(--line); }
+  .hero-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+  .hero-copy { display: grid; gap: 24px; min-width: 0; }
+  .status { display: inline-flex; align-items: center; gap: 10px; width: fit-content; font-weight: 600; font-size: 0.92rem; color: var(--good); background: var(--good-soft); padding: 8px 14px; border-radius: 999px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 0 var(--good); animation: pulse 2.2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--good) 60%, transparent); } 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+  .board { padding: 0; overflow: hidden; box-shadow: 0 24px 60px -32px rgba(15, 26, 46, 0.35); min-width: 0; }
+  .board-head { display: flex; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .board-list { list-style: none; margin: 0; padding: 0; }
+  .board-list li { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .x-name { font-weight: 600; line-height: 1.35; }
+  .x-proj { font-size: 0.85rem; color: var(--muted); }
+  .now { padding: 16px 20px; display: flex; gap: 10px; align-items: baseline; font-size: 0.95rem; background: var(--accent-soft); }
+
+  .stats-band { border-bottom: 1px solid var(--line); background: var(--surface); }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat { padding: 28px 24px; border-left: 1px solid var(--line); }
+  .stat:first-child { border-left: 0; padding-left: 0; }
+  .stat-value { font-family: var(--display); font-size: clamp(2.2rem, 4vw, 3rem); font-weight: 700; line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .stat-label { margin-top: 8px; color: var(--muted); font-size: 0.95rem; }
+
+  .stack-lg { display: grid; gap: 36px; }
+  .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .project { display: grid; gap: 12px; align-content: start; text-decoration: none; color: var(--ink); transition: transform .2s ease, border-color .2s ease; }
+  .project:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .go { color: var(--accent); font-weight: 600; margin-top: 6px; }
+  .art { height: 150px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); margin-bottom: 8px; padding: 18px; }
+  .art-research { display: grid; gap: 9px; align-content: center; }
+  .art-research span { display: block; height: 14px; width: var(--w); border-radius: 6px; background: var(--accent); opacity: 0.85; }
+  .art-research span:nth-child(n+2) { opacity: 0.55; }
+  .art-research span:nth-child(n+4) { opacity: 0.3; }
+  .art-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: center; }
+  .mini-field { height: 30px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
+  .mini-btn { grid-column: 1 / -1; height: 30px; border-radius: 999px; background: var(--accent); width: 45%; }
+  .mini-result { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; }
+  .mini-result b { font-family: var(--display); font-size: 1.7rem; color: var(--good); }
+  .mini-result i { flex: 1; height: 8px; border-radius: 6px; background: linear-gradient(90deg, var(--good) 70%, var(--line) 70%); }
+
+  .how-band { background: var(--surface); border-block: 1px solid var(--line); }
+  .loop { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; counter-reset: s; }
+  .loop li { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 2px solid var(--line); }
+  .loop li:first-child { border-top-color: var(--accent); }
+  .step { font-family: var(--mono); font-size: 0.8rem; color: var(--accent); }
+
+  .toolkit { display: grid; grid-template-columns: 1fr 1.4fr; gap: 32px; align-items: center; }
+
+  .cta { background: var(--ink); color: var(--paper); border-radius: 22px; padding: clamp(32px, 5vw, 56px); display: flex; justify-content: space-between; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .cta-sub { color: color-mix(in srgb, var(--paper) 75%, transparent); max-width: 52ch; }
+  .btn-light { background: var(--paper); color: var(--ink); }
+  .btn-outline-light { border-color: color-mix(in srgb, var(--paper) 40%, transparent); color: var(--paper); }
+
+  @media (max-width: 900px) {
+    .hero-grid, .projects, .toolkit { grid-template-columns: 1fr; }
+    .loop { grid-template-columns: 1fr 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(3) { border-left: 0; padding-left: 0; }
+    .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+  }
+  @media (max-width: 520px) {
+    .loop { grid-template-columns: 1fr; }
+    .stat { padding: 20px 14px; }
+    .stat:nth-child(even) { padding-right: 0; }
+  }
+</style>

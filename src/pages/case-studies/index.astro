@@ -1,0 +1,56 @@
+---
+// CASE STUDIES. Each one is a .md file in this folder (copy _case-study-template.md).
+import Base from '../../layouts/Base.astro';
+
+const studies = Object.entries(import.meta.glob('./*.md', { eager: true }))
+  .filter(([path]) => !path.split('/').pop().startsWith('_'))
+  .map(([, mod]) => mod)
+  .sort((a, b) => String(b.frontmatter.date).localeCompare(String(a.frontmatter.date)));
+---
+<Base
+  title="Case studies"
+  description="Growth marketing and analytics case studies: what I tried, what I measured, and what happened."
+  crumbs={[{ name: 'Case studies', path: '/case-studies/' }]}
+>
+  <section class="section head-band">
+    <div class="wrap stack">
+      <p class="eyebrow">Case studies</p>
+      <h1>What I tried, what I measured, what happened</h1>
+      <p class="lead">Each one starts with the result, shows the method, and ends with what I'd do next.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      {studies.length ? (
+        <div class="grid">
+          {studies.map((s) => (
+            <a class="card cs" href={s.url}>
+              {s.frontmatter.result && <span class="result">{s.frontmatter.result}</span>}
+              <h2>{s.frontmatter.title}</h2>
+              <p class="muted">{s.frontmatter.description}</p>
+              <span class="go">Read the case study →</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="card empty">
+          <h2>First case studies arrive in January</h2>
+          <p class="muted">Two projects are running now: the <a href="/research/">AI Search Visibility Study</a> and the <a href="/tools/">free marketing tools</a>. Their write-ups will appear here with the full numbers.</p>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head-band { border-bottom: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .cs { display: grid; gap: 12px; align-content: start; text-decoration: none; color: var(--ink); }
+  .cs:hover { border-color: var(--accent); }
+  .cs h2 { font-size: 1.45rem; }
+  .result { width: fit-content; font-family: var(--mono); font-weight: 600; font-size: 0.8rem; color: var(--good); background: var(--good-soft); padding: 6px 10px; border-radius: 999px; }
+  .go { color: var(--accent); font-weight: 600; }
+  .empty { display: grid; gap: 12px; max-width: 640px; padding: 32px; }
+  .empty h2 { font-size: 1.5rem; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+</style>

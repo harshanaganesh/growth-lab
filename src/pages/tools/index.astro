@@ -1,0 +1,67 @@
+---
+// TOOLS HUB. Add a new tool to this list when you build it.
+import Base from '../../layouts/Base.astro';
+import { me } from '../../../my-details.mjs';
+
+// status: "Live" links to the page. "Soon" shows it greyed out.
+const tools = [
+  { name: 'ROAS calculator', what: 'Is your ad spend profitable? See ROAS, break-even ROAS and profit in rupees.', path: '/tools/roas-calculator/', status: 'Live', sample: '4.0x' },
+  { name: 'CAC calculator', what: 'What does it cost you to win one new customer?', path: '', status: 'Soon', sample: '₹500' },
+  { name: 'LTV : CAC calculator', what: 'Is each customer worth more than they cost to win?', path: '', status: 'Soon', sample: '5.1' },
+  { name: 'A/B test significance', what: 'Did version B really win, or was it luck?', path: '', status: 'Soon', sample: '95%' },
+];
+const site = me.siteUrl.replace(/\/$/, '');
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Free marketing calculators',
+  url: site + '/tools/',
+  hasPart: tools.filter((t) => t.status === 'Live').map((t) => ({ '@type': 'WebApplication', name: t.name, url: site + t.path })),
+}];
+---
+<Base
+  title="Free Marketing Calculators (₹): ROAS, CAC, LTV"
+  description="Free marketing calculators in rupees for Indian marketers: ROAS, CAC, LTV to CAC and A/B test significance. No sign-up."
+  schema={schema}
+  crumbs={[{ name: 'Tools', path: '/tools/' }]}
+>
+  <section class="section head-band">
+    <div class="wrap stack">
+      <p class="eyebrow">Build · Free tools</p>
+      <h1>Marketing maths, done in seconds</h1>
+      <p class="lead">Free calculators in rupees, each with a short guide on what the number means and what to do next. No sign-up.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap grid">
+      {tools.map((t) => (
+        t.status === 'Live' ? (
+          <a class="card tool" href={t.path}>
+            <span class="sample">{t.sample}</span>
+            <h2>{t.name}</h2><p class="muted">{t.what}</p>
+            <span class="go">Open calculator →</span>
+          </a>
+        ) : (
+          <div class="card tool soon">
+            <span class="sample">{t.sample}</span>
+            <h2>{t.name}</h2><p class="muted">{t.what}</p>
+            <span class="pill pill-planned">Coming soon</span>
+          </div>
+        )
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head-band { border-bottom: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .tool { display: grid; gap: 10px; align-content: start; text-decoration: none; color: var(--ink); }
+  a.tool:hover { border-color: var(--accent); }
+  .tool h2 { font-size: 1.4rem; }
+  .sample { font-family: var(--display); font-size: 2.4rem; font-weight: 700; color: var(--accent); line-height: 1; }
+  .soon .sample { color: var(--muted); opacity: 0.6; }
+  .soon .pill { width: fit-content; }
+  .go { color: var(--accent); font-weight: 600; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+</style>

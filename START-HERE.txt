@@ -1,0 +1,44 @@
+GROWTH LAB STARTER SITE
+=======================
+
+This folder is your whole website. It's already designed and built.
+You only need to change ONE file: my-details.mjs
+
+Follow the Growth Lab Quest guide, level by level. The short version:
+
+1. Open this folder in VS Code (File > Open Folder).
+2. Open the terminal (Terminal > New Terminal) and type:
+       npm install
+   Wait until it finishes (1 to 3 minutes).
+3. Then type:
+       npm run dev
+   Hold Ctrl (Mac: Cmd) and click the localhost link. That's your site.
+4. Open my-details.mjs and change the words inside the "quotes".
+   Save with Ctrl + S. The browser updates by itself.
+
+Where things live
+-----------------
+my-details.mjs                      Your name, headline, links, tracking IDs, numbers
+public/                             Your resume.pdf and images go here
+src/pages/research/                 Research reports (copy _report-template.md)
+src/pages/case-studies/             Case studies (copy _case-study-template.md)
+src/pages/tools/roas-calculator.astro   Copy this file to make a new tool
+src/pages/tools/index.astro         The list of tools (add new ones here)
+src/pages/about.astro               Your three About paragraphs
+
+Rules that keep you safe
+------------------------
+- Change only the words inside "quotes". Keep every comma and bracket.
+- Ctrl + Z undoes a mistake. You can't break anything for good.
+- Stuck? Copy the exact error message and paste it to Claude,
+  with the level number you're on.
+
+Already built in for you
+------------------------
+- Schema markup on every page (Person, WebSite, ProfilePage, Dataset,
+  WebApplication, Article, BreadcrumbList)
+- Sitemap and robots.txt (made automatically)
+- Social share image (public/og.png)
+- GA4 and Microsoft Clarity (switch on when you add your IDs)
+- GA4 event "calculator_complete" on the ROAS calculator
+- Mobile layout, dark mode, fast loading

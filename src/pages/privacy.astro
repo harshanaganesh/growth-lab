@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import { me } from '../../my-details.mjs';
+---
+<Base title="Privacy" description="How this site measures visits." crumbs={[{ name: 'Privacy', path: '/privacy/' }]}>
+  <section class="section">
+    <div class="wrap prose">
+      <p class="eyebrow">Privacy</p>
+      <h1>How this site measures visits</h1>
+      <p>This site uses Google Analytics 4 and Microsoft Clarity to understand how visitors use it: which pages are read, which tools are used, and where visitors come from. Clarity may record anonymous sessions and heatmaps of clicks and scrolling.</p>
+      <p>No personal information is sold. The contact form is handled by Tally and is only used to reply to you.</p>
+      <p>Questions? Email <a href={`mailto:${me.email}`}>{me.email}</a>.</p>
+    </div>
+  </section>
+</Base>

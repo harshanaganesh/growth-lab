@@ -1,0 +1,58 @@
+---
+// ABOUT PAGE. ✏️ Write your own story in the three paragraphs below.
+import Base from '../layouts/Base.astro';
+import { me } from '../../my-details.mjs';
+
+const site = me.siteUrl.replace(/\/$/, '');
+const schema = [{
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: site + '/about/',
+  mainEntity: {
+    '@type': 'Person',
+    name: me.name,
+    jobTitle: me.role,
+    url: site + '/',
+    sameAs: [me.linkedin, me.github].filter((l) => l && !l.includes('your-')),
+    knowsAbout: me.toolkit,
+  },
+}];
+---
+<Base
+  title="About"
+  description={`About ${me.name}, a ${me.role.toLowerCase()} based in ${me.location}.`}
+  schema={schema}
+  crumbs={[{ name: 'About', path: '/about/' }]}
+>
+  <section class="section">
+    <div class="wrap about">
+      <div class="stack copy">
+        <p class="eyebrow">About</p>
+        <h1>Hi, I'm {me.name}.</h1>
+        <!-- ✏️ Replace these three paragraphs with your own words -->
+        <p class="lead">I'm a {me.role.toLowerCase()} who likes questions with numbers for answers.</p>
+        <p>Right now I'm studying how AI assistants decide which brands to recommend, because more and more people ask ChatGPT or Gemini before they search Google. I publish what I find every month.</p>
+        <p>I also build small free tools for marketers, track how people use them, and run tests to make them better. This whole site is my lab: built by me, hosted for free, and measured end to end.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/contact/">Get in touch</a>
+          {me.hasResume && <a class="btn btn-ghost" href="/resume.pdf">Download resume</a>}
+        </div>
+      </div>
+      <aside class="card facts">
+        <div><span class="eyebrow">Role</span><p>{me.role}</p></div>
+        <div><span class="eyebrow">Based in</span><p>{me.location}</p></div>
+        {me.openToWork && <div><span class="eyebrow">Looking for</span><p>{me.lookingFor}</p></div>}
+        <div><span class="eyebrow">Toolkit</span><div class="chips">{me.toolkit.map((t) => <span class="chip">{t}</span>)}</div></div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about { display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: start; }
+  .copy { gap: 20px; max-width: 62ch; }
+  .facts { display: grid; gap: 22px; }
+  .facts p { font-weight: 600; margin-top: 4px; }
+  .facts .chips { margin-top: 8px; }
+  @media (max-width: 860px) { .about { grid-template-columns: 1fr; } }
+</style>
