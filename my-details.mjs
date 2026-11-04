@@ -30,7 +30,7 @@ export const me = {
   hasResume: false,
 
   // ── Tracking IDs (Level 6). Leave "" until you have them. ──
-  ga4Id: "",                              // looks like "G-AB12CD34EF"
+  ga4Id: "G-RWKFR2QZ7T",                              // looks like "G-AB12CD34EF"
   clarityId: "",                          // looks like "abc123xyz9"
 
   // ── Contact form (Level 6). Your Tally form ID, e.g. "w7Bq2a" ──
