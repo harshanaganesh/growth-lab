@@ -19,7 +19,7 @@ export const me = {
   lookingFor: "Growth marketing and marketing analyst roles",
 
   // ── Your web address (after Level 5, paste your pages.dev address) ──
-  siteUrl: "https://harshana.pages.dev",
+     siteUrl: "https://the-ai-echolab.pages.dev",
 
   // ── Where people can find you ────────────────────────────
   email: "you@example.com",
@@ -41,7 +41,7 @@ export const me = {
 
   // ── Your research niche (Idea 1) ─────────────────────────
   study: {
-    niche: "D2C skincare brands in India",
+       niche: "investing apps in India",
     questions: 20,
     assistants: ["ChatGPT", "Gemini", "Perplexity", "Copilot"],
     rounds: [
