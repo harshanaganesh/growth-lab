@@ -22,9 +22,9 @@ export const me = {
      siteUrl: "https://the-ai-echolab.pages.dev",
 
   // ── Where people can find you ────────────────────────────
-  email: "you@example.com",
-  linkedin: "https://www.linkedin.com/in/your-name",
-  github: "https://github.com/your-username",
+  email: "harshana.growthlab@gmail.com",
+  linkedin: "https://www.linkedin.com/in/harshanaganeshrajan/",
+  github: "https://github.com/harshanaganesh",
 
   // ── Resume: drop resume.pdf into the "public" folder, then set true ──
   hasResume: false,
