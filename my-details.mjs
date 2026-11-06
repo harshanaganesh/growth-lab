@@ -12,7 +12,7 @@ export const me = {
   name: "Harshana",                       // your full name
   role: "Growth Marketer & Analyst",
   location: "India",
-  headline: "I study how AI picks investing apps.",
+  headline: "Current project: the AI Echo study. Every month I ask ChatGPT, Gemini, Perplexity and Copilot the same 20 questions about investing apps in India, track which apps they recommend and which sources they trust, and publish what I find.",
   intro:
     "I research how AI assistants are changing search, build free tools marketers actually use, and measure everything I ship.",
   openToWork: true,                       // shows the green “Open to roles” badge
@@ -62,7 +62,7 @@ export const me = {
 
   // ── Your Lab board. status can be "Planned", "Running" or "Done" ──
   experiments: [
-    { name: "Which brands do AI assistants recommend?", project: "Research", status: "Running" },
+    { name: "Which investing apps do AI assistants recommend in India?", project: "Research", status: "Running" },
     { name: "Can a new site get cited by AI in 6 weeks?", project: "Research", status: "Planned" },
     { name: "Does a pre-filled margin box lift completions?", project: "Tools", status: "Planned" },
   ],
