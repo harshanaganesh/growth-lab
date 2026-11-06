@@ -12,7 +12,7 @@ export const me = {
   name: "Harshana",                       // your full name
   role: "Growth Marketer & Analyst",
   location: "India",
-  headline: "I study how AI picks investing apps..",
+  headline: "I study how AI picks investing apps.",
   intro:
     "Current project: the AI Echo study. Every month I ask ChatGPT, Gemini, Perplexity and Copilot the same 20 questions about investing apps in India, track which apps they recommend and which sources they trust, and publish what I find.",
   openToWork: true,                       // shows the green “Open to roles” badge
