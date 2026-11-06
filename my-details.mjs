@@ -12,9 +12,9 @@ export const me = {
   name: "Harshana",                       // your full name
   role: "Growth Marketer & Analyst",
   location: "India",
-  headline: "Current project: the AI Echo study. Every month I ask ChatGPT, Gemini, Perplexity and Copilot the same 20 questions about investing apps in India, track which apps they recommend and which sources they trust, and publish what I find.",
+  headline: "I study how AI picks investing apps..",
   intro:
-    "I research how AI assistants are changing search, build free tools marketers actually use, and measure everything I ship.",
+    "Current project: the AI Echo study. Every month I ask ChatGPT, Gemini, Perplexity and Copilot the same 20 questions about investing apps in India, track which apps they recommend and which sources they trust, and publish what I find.",
   openToWork: true,                       // shows the green “Open to roles” badge
   lookingFor: "Growth marketing and marketing analyst roles",
 
